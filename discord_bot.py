@@ -25,19 +25,38 @@ async def on_message(message):
     if message.author == client.user:
         return
 
-    if message.content.startswith('!gpt4'):
-        response = request_openai(message)
+    if message.content.startswith("!gpt3"):
+        response = request_openai_gpt3(message)
+        split_answer_parts = generate_answer_parts(response)
+
+        for part in split_answer_parts:
+            await message.channel.send(part)
+
+    if message.content.startswith("!gpt4"):
+        response = request_openai_gpt4(message)
         split_answer_parts = generate_answer_parts(response)
 
         for part in split_answer_parts:
             await message.channel.send(part)
 
 
-def request_openai(message):
+def request_openai_gpt4(message):
     user_message = message.content.replace(f"!gpt4", "").strip()
 
     return openai.ChatCompletion.create(
         engine="gpt-4-32k",
+        messages=[
+            {"role": "system", "content": "You are a software engineer."},
+            {"role": "user", "content": user_message},
+        ],
+    )
+
+
+def request_openai_gpt3(message):
+    user_message = message.content.replace(f"!gpt3", "").strip()
+
+    return openai.ChatCompletion.create(
+        engine="gpt-35-turbo",
         messages=[
             {"role": "system", "content": "You are a software engineer."},
             {"role": "user", "content": user_message},
