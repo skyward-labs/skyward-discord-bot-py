@@ -34,7 +34,7 @@ async def on_message(message):
 
 
 def request_openai(message):
-    user_message = message.content.replace(f"<@!{client.user.id}>", "").strip()
+    user_message = message.content.replace(f"!gpt4", "").strip()
 
     return openai.ChatCompletion.create(
         engine="gpt-4-32k",
