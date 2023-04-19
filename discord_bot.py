@@ -25,21 +25,24 @@ async def on_message(message):
     if message.author == client.user:
         return
 
-    if client.user.mentioned_in(message):
-        user_message = message.content.replace(f"<@!{client.user.id}>", "").strip()
-
-        response = openai.ChatCompletion.create(
-            engine="gpt-4-32k",
-            messages=[
-                {"role": "system", "content": "You are a software engineer."},
-                {"role": "user", "content": user_message},
-            ],
-        )
-
+    if message.content.startswith('!gpt4'):
+        response = request_openai(message)
         split_answer_parts = generate_answer_parts(response)
 
         for part in split_answer_parts:
             await message.channel.send(part)
+
+
+def request_openai(message):
+    user_message = message.content.replace(f"<@!{client.user.id}>", "").strip()
+
+    return openai.ChatCompletion.create(
+        engine="gpt-4-32k",
+        messages=[
+            {"role": "system", "content": "You are a software engineer."},
+            {"role": "user", "content": user_message},
+        ],
+    )
 
 
 def generate_answer_parts(response):
