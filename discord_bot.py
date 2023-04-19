@@ -6,10 +6,10 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-openai.api_key = os.getenv("openai_key")
-openai.api_type = os.getenv("openai_type")
-openai.api_base = os.getenv("openai_base")
-openai.api_version = "2023-03-15-preview"
+openai.api_key = os.getenv("openai_api_key")
+openai.api_base = os.getenv("openai_api_base")
+openai.api_type = os.getenv("openai_api_type")
+openai.api_version = os.getenv("openai_api_version")
 
 intents = discord.Intents.all()
 client = discord.Client(command_prefix="!", intents=intents)
@@ -40,11 +40,11 @@ async def on_message(message):
             await message.channel.send(part)
 
 
-def request_openai_gpt4(message):
-    user_message = message.content.replace(f"!gpt4", "").strip()
+def request_openai_gpt3(message):
+    user_message = message.content.replace(f"!gpt3", "").strip()
 
     return openai.ChatCompletion.create(
-        engine="gpt-4-32k",
+        engine="gpt-35-turbo",
         messages=[
             {"role": "system", "content": "You are a software engineer."},
             {"role": "user", "content": user_message},
@@ -52,11 +52,11 @@ def request_openai_gpt4(message):
     )
 
 
-def request_openai_gpt3(message):
-    user_message = message.content.replace(f"!gpt3", "").strip()
+def request_openai_gpt4(message):
+    user_message = message.content.replace(f"!gpt4", "").strip()
 
     return openai.ChatCompletion.create(
-        engine="gpt-35-turbo",
+        engine="gpt-4-32k",
         messages=[
             {"role": "system", "content": "You are a software engineer."},
             {"role": "user", "content": user_message},
