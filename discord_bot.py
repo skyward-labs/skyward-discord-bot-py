@@ -3,6 +3,7 @@ import discord
 import openai
 import re
 from dotenv import load_dotenv
+from keep_alive import keep_alive
 
 load_dotenv()
 
@@ -25,14 +26,7 @@ async def on_message(message):
     if message.author == client.user:
         return
 
-    if message.content.startswith("!gpt3"):
-        response = request_openai_gpt3(message)
-        split_answer_parts = generate_answer_parts(response)
-
-        for part in split_answer_parts:
-            await message.channel.send(part)
-
-    if message.content.startswith("!gpt4"):
+    if message.content.startswith("!gpt"):
         response = request_openai_gpt4(message)
         split_answer_parts = generate_answer_parts(response)
 
@@ -40,23 +34,17 @@ async def on_message(message):
             await message.channel.send(part)
 
 
-def request_openai_gpt3(message):
-    user_message = message.content.replace(f"!gpt3", "").strip()
-
-    return openai.ChatCompletion.create(
-        engine="gpt-35-turbo",
-        messages=[
-            {"role": "system", "content": "You are a software engineer."},
-            {"role": "user", "content": user_message},
-        ],
-    )
-
-
 def request_openai_gpt4(message):
-    user_message = message.content.replace(f"!gpt4", "").strip()
+    user_message = message.content.replace(f"!gpt", "").strip()
 
     return openai.ChatCompletion.create(
         engine="gpt-4-32k",
+        temperature=0.5,
+        max_tokens=24634,
+        top_p=0.95,
+        frequency_penalty=0,
+        presence_penalty=0,
+        stop=None,
         messages=[
             {"role": "system", "content": "You are a software engineer."},
             {"role": "user", "content": user_message},
@@ -94,4 +82,5 @@ def generate_answer_parts(response):
     return split_answer_parts
 
 
+keep_alive()
 client.run(os.getenv("discord_token"))
