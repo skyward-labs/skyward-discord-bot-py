@@ -26,18 +26,24 @@ async def on_message(message):
         return
 
     if message.content.startswith("!gpt"):
-        response = request_openai_gpt4(message)
-        split_answer_parts = generate_answer_parts(response)
+        user_message = message.content.replace(f"!gpt", "").strip()
 
-        for part in split_answer_parts:
+        messages = [
+            {"role": "system", "content": "You are a software engineer."},
+            {"role": "user", "content": user_message},
+        ]
+
+        answer = request_openai_gpt4(messages)
+
+        messages.append({"role": "assistant", "content": answer})
+
+        for part in generate_answer_parts(answer):
             await message.channel.send(part)
 
 
-def request_openai_gpt4(message):
-    user_message = message.content.replace(f"!gpt", "").strip()
-
+def request_openai_gpt4(messages):
     try:
-        return openai.ChatCompletion.create(
+        response = openai.ChatCompletion.create(
             engine="gpt-4-32k",
             temperature=0.5,
             max_tokens=24634,
@@ -45,19 +51,15 @@ def request_openai_gpt4(message):
             frequency_penalty=0,
             presence_penalty=0,
             stop=None,
-            messages=[
-                {"role": "system", "content": "You are a software engineer."},
-                {"role": "user", "content": user_message},
-            ],
+            messages=messages,
         )
+
+        return response["choices"][0]["message"]["content"]
     except:
         return "An exception has occured."
 
 
-def generate_answer_parts(response):
-    # Extract the answer from the API response
-    answer = response["choices"][0]["message"]["content"]
-
+def generate_answer_parts(answer):
     # Separate code snippets from the answer using regex
     code_snippets = re.findall(r"```[\s\S]*?```", answer)
     non_code_parts = re.split(r"```[\s\S]*?```", answer)
