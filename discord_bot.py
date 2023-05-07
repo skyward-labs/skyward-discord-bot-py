@@ -3,7 +3,6 @@ import discord
 import openai
 import re
 from dotenv import load_dotenv
-from keep_alive import keep_alive
 
 load_dotenv()
 
@@ -37,19 +36,22 @@ async def on_message(message):
 def request_openai_gpt4(message):
     user_message = message.content.replace(f"!gpt", "").strip()
 
-    return openai.ChatCompletion.create(
-        engine="gpt-4-32k",
-        temperature=0.5,
-        max_tokens=24634,
-        top_p=0.95,
-        frequency_penalty=0,
-        presence_penalty=0,
-        stop=None,
-        messages=[
-            {"role": "system", "content": "You are a software engineer."},
-            {"role": "user", "content": user_message},
-        ],
-    )
+    try:
+        return openai.ChatCompletion.create(
+            engine="gpt-4-32k",
+            temperature=0.5,
+            max_tokens=24634,
+            top_p=0.95,
+            frequency_penalty=0,
+            presence_penalty=0,
+            stop=None,
+            messages=[
+                {"role": "system", "content": "You are a software engineer."},
+                {"role": "user", "content": user_message},
+            ],
+        )
+    except:
+        return "An exception has occured."
 
 
 def generate_answer_parts(response):
@@ -82,5 +84,4 @@ def generate_answer_parts(response):
     return split_answer_parts
 
 
-keep_alive()
 client.run(os.getenv("discord_token"))
