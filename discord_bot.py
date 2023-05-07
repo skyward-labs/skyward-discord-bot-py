@@ -2,6 +2,7 @@ import os
 import discord
 import openai
 import re
+from collections import deque
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -13,9 +14,10 @@ openai.api_version = os.getenv("openai_api_version")
 
 intents = discord.Intents.all()
 client = discord.Client(command_prefix="!", intents=intents)
-messages = [
-    {"role": "system", "content": "You are a software engineer."},
-]
+
+converstion_limit: int = 8
+messages = deque(maxlen=converstion_limit)
+messages.append({"role": "system", "content": "You are a software engineer."})
 
 
 @client.event
@@ -51,12 +53,12 @@ def request_openai_gpt4(messages):
             frequency_penalty=0,
             presence_penalty=0,
             stop=None,
-            messages=messages,
+            messages=[*messages],
         )
 
         return response["choices"][0]["message"]["content"]
-    except openai.error as e:
-        return f"An exception has occured. {e}"
+    except:
+        return f"An exception has occured."
 
 
 def generate_answer_parts(answer):
