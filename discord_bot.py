@@ -13,6 +13,9 @@ openai.api_version = os.getenv("openai_api_version")
 
 intents = discord.Intents.all()
 client = discord.Client(command_prefix="!", intents=intents)
+messages = [
+    {"role": "system", "content": "You are a software engineer."},
+]
 
 
 @client.event
@@ -28,10 +31,7 @@ async def on_message(message):
     if message.content.startswith("!gpt"):
         user_message = message.content.replace(f"!gpt", "").strip()
 
-        messages = [
-            {"role": "system", "content": "You are a software engineer."},
-            {"role": "user", "content": user_message},
-        ]
+        messages.append({"role": "user", "content": user_message})
 
         answer = request_openai_gpt4(messages)
 
@@ -55,8 +55,8 @@ def request_openai_gpt4(messages):
         )
 
         return response["choices"][0]["message"]["content"]
-    except:
-        return "An exception has occured."
+    except openai.error as e:
+        return f"An exception has occured. {e}"
 
 
 def generate_answer_parts(answer):
