@@ -29,7 +29,6 @@ async def on_message(message: discord.Message):
     if message.author == client.user:
         return
 
-
     if message.content.startswith("!gpt"):
         user_message = message.content.replace(f"!gpt", "").strip()
 
