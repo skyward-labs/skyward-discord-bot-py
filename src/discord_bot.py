@@ -1,16 +1,11 @@
 import os
 import discord
-import openai
 import re
+from gpt import request_openai_gpt4
 from collections import deque
 from dotenv import load_dotenv
 
 load_dotenv()
-
-openai.api_key = os.getenv("openai_api_key")
-openai.api_base = os.getenv("openai_api_base")
-openai.api_type = os.getenv("openai_api_type")
-openai.api_version = os.getenv("openai_api_version")
 
 intents = discord.Intents.all()
 client = discord.Client(command_prefix="!", intents=intents)
@@ -41,24 +36,6 @@ async def on_message(message: discord.Message):
 
         for part in generate_answer_parts(answer):
             await message.channel.send(part)
-
-
-def request_openai_gpt4(messages):
-    try:
-        response = openai.ChatCompletion.create(
-            engine="gpt-4-32k",
-            temperature=0.5,
-            max_tokens=24634,
-            top_p=0.95,
-            frequency_penalty=0,
-            presence_penalty=0,
-            stop=None,
-            messages=[*messages],
-        )
-
-        return response["choices"][0]["message"]["content"]
-    except:
-        return f"An exception has occured."
 
 
 def generate_answer_parts(answer):
@@ -97,4 +74,5 @@ def append_message_to_channel(channel_id, message):
     return channels[channel_id]
 
 
-client.run(os.getenv("discord_token"))
+def run_bot():
+    client.run(os.getenv("discord_token"))

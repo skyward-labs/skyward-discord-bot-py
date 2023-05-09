@@ -7,4 +7,4 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
-CMD ["python", "discord_bot.py"]
+CMD ["python", "src/__init__.py"]
