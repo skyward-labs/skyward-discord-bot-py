@@ -16,8 +16,7 @@ intents = discord.Intents.all()
 client = discord.Client(command_prefix="!", intents=intents)
 
 converstion_limit: int = 8
-messages = deque(maxlen=converstion_limit)
-messages.append({"role": "system", "content": "You are a software engineer."})
+channels = {}
 
 
 @client.event
@@ -26,18 +25,18 @@ async def on_ready():
 
 
 @client.event
-async def on_message(message):
+async def on_message(message: discord.Message):
     if message.author == client.user:
         return
 
     if message.content.startswith("!gpt"):
         user_message = message.content.replace(f"!gpt", "").strip()
 
-        messages.append({"role": "user", "content": user_message})
+        messages = append_message_to_channel(message.channel.id, {"role": "user", "content": user_message})
 
         answer = request_openai_gpt4(messages)
 
-        messages.append({"role": "assistant", "content": answer})
+        append_message_to_channel(message.channel.id, {"role": "assistant", "content": answer})
 
         for part in generate_answer_parts(answer):
             await message.channel.send(part)
@@ -86,6 +85,15 @@ def generate_answer_parts(answer):
         )
 
     return split_answer_parts
+
+
+def append_message_to_channel(channel_id, message):
+    if (channel_id not in channels):
+        channels[channel_id] = deque(maxlen=converstion_limit)
+        channels[channel_id].append({"role": "system", "content": "You are a software engineer."})
+
+    channels[channel_id].append(message)
+    return channels[channel_id]
 
 
 client.run(os.getenv("discord_token"))
