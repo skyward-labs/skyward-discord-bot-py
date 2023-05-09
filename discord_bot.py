@@ -31,13 +31,14 @@ async def on_message(message):
         return
 
     if message.content.startswith("!gpt"):
-        user_message = message.content.replace(f"!gpt", "").strip()
+        async with message.channel.typing():
+            user_message = message.content.replace(f"!gpt", "").strip()
 
-        messages.append({"role": "user", "content": user_message})
+            messages.append({"role": "user", "content": user_message})
 
-        answer = request_openai_gpt4(messages)
+            answer = request_openai_gpt4(messages)
 
-        messages.append({"role": "assistant", "content": answer})
+            messages.append({"role": "assistant", "content": answer})
 
         for part in generate_answer_parts(answer):
             await message.channel.send(part)
