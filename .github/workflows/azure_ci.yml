@@ -35,6 +35,10 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+    - name: Delete existing container group
+      run: |
+        az container delete --name skyward-discord-bot --resource-group skyward-labs --yes
+
     - name: Deploy to Azure Container Instances
       uses: azure/aci-deploy@v1
       with:
