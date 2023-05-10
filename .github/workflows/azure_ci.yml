@@ -30,6 +30,9 @@ jobs:
         push: true
         tags: skywardcontainer.azurecr.io/skywardbot:latest
 
+    - name: Azure Login
+      uses: Azure/login@v1
+
     - name: Deploy to Azure Container Instances
       uses: azure/aci-deploy@v1
       with:
