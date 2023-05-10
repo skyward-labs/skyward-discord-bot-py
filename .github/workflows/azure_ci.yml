@@ -32,6 +32,8 @@ jobs:
 
     - name: Azure Login
       uses: Azure/login@v1
+      with:
+        credentials: ${{ secrets.AZURE_CREDENTIALS }}
 
     - name: Deploy to Azure Container Instances
       uses: azure/aci-deploy@v1
