@@ -38,11 +38,11 @@ jobs:
     - name: Deploy to Azure Container Instances
       uses: azure/aci-deploy@v1
       with:
-        resource_group: skyward-labs
-        registry_login_server: skywardcontainer.azurecr.io
-        registry_username: ${{ secrets.ACR_USERNAME }}
-        registry_password: ${{ secrets.ACR_PASSWORD }}
-        container_name: skyward-discord-bot
+        resource-group: skyward-labs
+        registry-login-server: skywardcontainer.azurecr.io
+        registry-username: ${{ secrets.ACR_USERNAME }}
+        registry-password: ${{ secrets.ACR_PASSWORD }}
+        container-name: skyward-discord-bot
         image: skywardcontainer.azurecr.io/skywardbot:latest
-        dns_name_label: skyward-discord-bot
+        dns-name-label: skyward-discord-bot
         location: eastus
