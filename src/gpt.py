@@ -24,5 +24,6 @@ def request_openai_gpt4(messages):
         )
 
         return response["choices"][0]["message"]["content"]
-    except:
-        return f"An exception has occured."
+    except Exception as e:
+        print(e)
+        return "An excpetion occured."
