@@ -42,7 +42,7 @@ jobs:
         registry-login-server: skywardcontainer.azurecr.io
         registry-username: ${{ secrets.ACR_USERNAME }}
         registry-password: ${{ secrets.ACR_PASSWORD }}
-        container-name: skyward-discord-bot
+        name: skyward-discord-bot
         image: skywardcontainer.azurecr.io/skywardbot:latest
         dns-name-label: skyward-discord-bot
         location: eastus
