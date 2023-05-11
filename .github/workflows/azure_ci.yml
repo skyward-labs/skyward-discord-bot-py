@@ -50,11 +50,5 @@ jobs:
           image: skywardcontainer.azurecr.io/skywardbot:latest
           dns-name-label: skyward-discord-bot
           location: eastus
-          environment-variables: |
-            openai_api_type=azure  
-            openai_api_base=https://skyward-azure-openai.openai.azure.com/  
-            discord_prefix=gpt
-          secure-environment-variables:
-            openai_api_version=${{ secrets.OPENAI_API_VERSION }}
-            discord_token=${{ secrets.DISCORD_TOKEN }}
-            openai_api_key=${{ secrets.OPENAI_API_KEY }}
+          environment-variables: openai_api_type=azure openai_api_base=https://skyward-azure-openai.openai.azure.com/ discord_prefix=gpt
+          secure-environment-variables: openai_api_version=${{ secrets.OPENAI_API_VERSION }} discord_token=${{ secrets.DISCORD_TOKEN }} openai_api_key=${{ secrets.OPENAI_API_KEY }}
