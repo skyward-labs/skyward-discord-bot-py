@@ -2,7 +2,7 @@ FROM python:3.11.3
 
 WORKDIR /app
 
-RUN apt-get update && apt-get install libssl-dev libasound2
+RUN apt-get update && apt-get install -y libssl-dev libasound2
 
 COPY requirements.txt requirements.txt
 RUN pip install --upgrade pip
