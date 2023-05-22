@@ -1,0 +1,42 @@
+name: Trigger auto deployment for skyward-discord-bot
+
+# When this action will be executed
+on:
+  # Automatically trigger it when detected changes in repo
+  push:
+    branches: 
+      [ main ]
+    paths:
+    - '**'
+    - '.github/workflows/skyward-discord-bot-AutoDeployTrigger-31534787-cf93-4b6f-8117-66bda220011d.yml'
+
+  # Allow mannually trigger 
+  workflow_dispatch:
+      
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout to the branch
+        uses: actions/checkout@v2
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.SKYWARDDISCORDBOT_AZURE_CREDENTIALS }}
+
+      - name: Build and push container image to registry
+        uses: azure/container-apps-deploy-action@v1
+        with:
+          appSourcePath: ${{ github.workspace }} 
+          registryUrl: skywardcontainer.azurecr.io
+          registryUsername: ${{ secrets.SKYWARDDISCORDBOT_REGISTRY_USERNAME }}
+          registryPassword: ${{ secrets.SKYWARDDISCORDBOT_REGISTRY_PASSWORD }}
+          containerAppName: skyward-discord-bot
+          resourceGroup: skyward-labs
+          imageToBuild: skywardcontainer.azurecr.io/skyward-discord-bot:${{ github.sha }}
+          dockerfilePath: Dockerfile
+
+     
+
