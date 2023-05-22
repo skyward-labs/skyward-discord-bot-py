@@ -54,5 +54,7 @@ jobs:
             openai_api_version="2023-03-15-preview"
             openai_api_base="https://skyward-azure-openai.openai.azure.com/"
             discord_prefix="!gpt"
+            speech_region="eastus"
             discord_token="${{ secrets.DISCORD_TOKEN }}"
             openai_api_key="${{ secrets.OPENAI_API_KEY }}"
+            speech_key="${{ secrets.SPEECH_KEY }}"
