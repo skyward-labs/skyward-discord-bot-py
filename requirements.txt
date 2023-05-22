@@ -2,3 +2,4 @@ discord.py
 openai
 python-dotenv
 PyNaCl
+azure-cognitiveservices-speech==1.27.0
